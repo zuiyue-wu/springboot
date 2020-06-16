@@ -5,5 +5,66 @@
     <select id="selectPosition" resultType="com.jk.pojo.Temp">
           select  username,position from t_temp
     </select>
-
+    
+    <!-- 删除员工 -->
+    <delete id="deletePosition"  parameterType="com.jk.pojo.Temp" >
+   delete  from t_temp  where  username= #{username}
+    </delete>
+    
+    <!-- 查询员工 -->
+    <select id="selectPosition" resultType="com.jk.pojo.Temp">
+          select  * from t_temp
+    </select>
+    
+    <!-- 新增员工 -->
+    <insert id = "savePower" parameterType="com.jk.pojo.Temp ">
+<!--     INSERT INTO t_temp (username, NAME, PASSWORD, sex, birthday, hire_Date, position, qualification, professional, experience, flag )
+	VALUES values(#{username},#{name},#{password},#{sex},
+    #{birthday},#{hireDate},#{position},#{qualification},#{professional},#{experience},#{flag})
+     -->
+	   INSERT INTO t_temp(username, NAME, PASSWORD, sex,birthday, hire_Date, position, qualification, professional, experience, flag)
+		VALUES (#{username},#{name},#{password},#{sex},#{birthday},#{hireDate},#{position},#{qualification},#{professional},#{experience},#{flag});
+	</insert>
+    
+    <!-- 查询未分配员工 -->
+    <select id="selectPosition" resultType="com.jk.pojo.Temp">
+          select  * from t_temp where super_id = '' OR super_id IS NULL and flag  = "3"
+    </select>
+    
+    <!-- 查询主管 -->
+    <select id="listflag" resultType="com.jk.pojo.Temp">
+         select  * from t_temp where flag = "2"
+    </select>
+    
+    <!-- 新增员工部门 -->
+    	<update id="updateflag" parameterType="com.jk.pojo.Temp">
+    	 	update t_temp t set superid = #{superid} where username=#{username}
+    	</update>
+    <!-- 查询员工任务 -->
+    	 <select id="listflag" resultType="com.jk.pojo.TaskDao">
+		select * from t_task t1 left join t_temp t2 on t1.staff_id = t2.username
+	left join t_plan t3 on t3.task_id = t1.id 
+	where t2.flag = 3
+    </select>
+    
+    <!-- 新建计划 -->
+    	    <insert id = "saveplan" parameterType="com.jk.pojo.Plan">
+	   INSERT INTO t_plan(id,lan_name, plan_state, feedback, plan_begin_date,plan_end_date, plan_description, task_id)
+		VALUES (#{id},#{planName},#{planState},#{feedback},#{planBeginDate},#{planEndDate},#{planDescription},#{taskId});
+	</insert>
+	<!-- 修改任务状态 -->
+	    <update id="updatask" parameterType="com.jk.pojo.Task">
+    	 	update t_task t set task_state = 1 where id=#{id}
+    	</update>
+    <!-- 计划反馈 -->	
+	   <select id="updatequeryTask" resultType="com.jk.pojo.Plan">
+			select *  from t_plan where id = #{id}
+    </select>
+    
+    <!-- 任务修改 -->
+    	<update id="updatPlan" parameterType="com.jk.pojo.Plan">
+    	update t_plan t set lan_name = #{planName},plan_state = #{planState},feedback = #{feedback},plan_begin_date = #{planBeginDate}
+    	plan_end_date = #{planEndDate},plan_description = #{planDescription},plan_feedback=#{planFeedback},task_id=#{taskId}
+    	 where id=#{id}
+    	</update>
 </mapper>    
