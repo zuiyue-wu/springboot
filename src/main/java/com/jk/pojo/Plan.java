@@ -25,7 +25,13 @@ public class Plan {
 
     private Integer taskId;
 
+    private  String taskName;
 
+
+    private Date planEndDateEndTime;
+    private  Date planEndDateStartTime;
+    private  Date planBeginDateEndTime;
+    private  Date planBeginDateStartTime;
 
 
 }

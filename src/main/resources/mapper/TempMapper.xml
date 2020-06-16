@@ -1,9 +1,254 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jk.mapper.TempMapper">
+    <delete id="deleteTask" parameterType="com.jk.pojo.Task">
+        delete  from   t_task where  id = #{id}
+    </delete>
+
 
     <select id="selectPosition" resultType="com.jk.pojo.Temp">
-          select  username,position from t_temp
+          select  name,username,position,super_id from t_temp  group  by username
     </select>
 
-</mapper>    
+
+    <select id="selectUser" resultType="com.jk.pojo.Temp">
+        SELECT username FROM t_temp WHERE 1 = 1
+        <if test="password != null">
+            and password= #{password}
+        </if>
+        <if test="username != null">
+            and username= #{username}
+        </if>
+        <if test="position != null">
+            and position= #{position}
+        </if>
+
+    </select>
+
+    <select id="selectPassword" resultType="com.jk.pojo.Temp">
+        SELECT  name,password,position FROM t_temp  WHERE name=#{name}
+    </select>
+
+
+    <insert id="insertTask" parameterType="com.jk.pojo.Task">
+        INSERT INTO t_task (id,task_name,task_begin_time,task_begin_time,task_description,task_state,staff_id,emp_id)
+         VALUES (#{id},#{taskName},#{taskBeginTime},#{taskEndTime},#{taskDescription},#{taskState},#{staffId},#{empId})
+
+    </insert>
+
+
+    <select id="getImplementer" resultType="com.jk.pojo.Temp">
+        select  name,username,position,super_id from t_temp  where flag = 3
+    </select>
+
+
+    <select id="selectTask" resultType="com.jk.pojo.Task">
+            SELECT
+            a.id id,
+            a.task_name taskName,
+            a.task_begin_time taskBeginTime,
+            a.task_end_time taskEndTime,
+            a.task_description taskDescription,
+        CASE
+                a.task_state
+                WHEN '1' THEN
+                '实施中'
+                WHEN '2' THEN
+                '已完成'
+                WHEN '0' THEN
+                '未实施'
+            END taskState,
+            b.NAME staffId,
+            c.name empId
+        FROM
+            t_task a
+            LEFT JOIN t_temp b ON a.staff_id = b.username
+            LEFT JOIN t_temp c ON a.emp_id = c.username
+    </select>
+
+    <select id="selectTaskDatails"  resultType="com.jk.pojo.Plan">
+        SELECT
+            id id,
+            plan_name planName,
+            plan_state planState,
+            feedback feedback,
+            plan_begin_date planBeginDate,
+            plan_end_date planEndDate,
+            plan_description planDescription,
+            plan_feedback planFeedback,
+            task_id taskId
+        FROM
+            t_plan  where   task_id = #{taskId}
+    </select>
+
+
+    <select id="selectTaskDetails" resultType="com.jk.pojo.Task">
+            SELECT
+            a.id id,
+            a.task_name taskName,
+            a.task_begin_time taskBeginTime,
+            a.task_end_time taskEndTime,
+            a.task_description taskDescription,
+        CASE
+                a.task_state
+                WHEN '1' THEN
+                '实施中'
+                WHEN '2' THEN
+                '已完成'
+                WHEN '0' THEN
+                '未实施'
+            END taskState,
+            b.NAME staffId,
+            c.name empId
+        FROM
+            t_task a
+            LEFT JOIN t_temp b ON a.staff_id = b.username
+            LEFT JOIN t_temp c ON a.emp_id = c.username  where  a.id = #{id}
+    </select>
+
+    <select id="selectplanDatails" resultType="com.jk.pojo.Plan">
+        SELECT
+            a.plan_name planName,
+            a.plan_description planDescription,
+            a.plan_end_date planEndDate,
+            a.plan_begin_date planBeginDate,
+            k.task_name taskName,
+            a.plan_state planState,
+            a.plan_feedback planFeedback
+        FROM
+            t_plan a
+            LEFT JOIN t_task k on a.task_id = k.id  where  a.id = #{id}
+    </select>
+
+
+
+
+    <select id="getTrackingTasks" resultType="com.jk.pojo.Task">
+         SELECT
+         a.id id,
+        a.task_name taskName,
+        p.name name,
+        a.task_end_time taskEndTime,
+        a.task_begin_time taskBeginTime,
+        CASE a.task_state
+        WHEN '1' THEN
+            '实施中'
+    END  as taskState
+
+    FROM
+        t_task a
+        LEFT JOIN t_temp p  on  a.staff_id = p.username
+    WHERE
+        a.task_state = '1'
+    </select>
+
+    <update id="updateState" parameterType="com.jk.pojo.Task">
+        update  t_task  set a.task_state = #{taskState}  where id=#{id}
+    </update>
+
+
+    <select id="getNotTrackingTasks" resultType="com.jk.pojo.Task">
+         SELECT
+         a.id id,
+        a.task_name taskName,
+        p.name name,
+        a.task_end_time taskEndTime,
+        a.task_begin_time taskBeginTime,
+        CASE a.task_state
+        WHEN '0' THEN
+            '未实施'
+    END  as taskState
+
+    FROM
+        t_task a
+        LEFT JOIN t_temp p  on  a.staff_id = p.username
+    WHERE
+        a.task_state = '0'
+    </select>
+
+
+
+    <select id="adjustmentDetails"  resultType="com.jk.pojo.Task">
+                 SELECT
+         a.id id,
+        a.task_name taskName,
+        p.name staffId,
+        a.task_end_time taskEndTime,
+        a.task_begin_time taskBeginTime,
+        CASE a.task_state
+        WHEN '0' THEN
+            '未实施'
+    END  as taskState
+
+    FROM
+        t_task a
+        LEFT JOIN t_temp p  on  a.staff_id = p.username
+    WHERE
+        a.task_state = '0' and a.id = #{id}
+    </select>
+
+
+    <update id="updateDjustmentDetails" parameterType="com.jk.pojo.Task">
+        update   t_task  set  task_name =#{taskName},task_end_time = #{task_end_time},
+        task_begin_time = #{taskBeginTime},staff_id = #{staffId},task_description = #{taskDescription}
+        where  id = #{id}
+    </update>
+
+
+    <select id="selectTemps" resultType="com.jk.pojo.Temp">
+         SELECT username,name,sex,hire_date hireDate,position from t_temp
+    </select>
+
+
+    <select id="selectTempsDateils" resultType="com.jk.pojo.Temp">
+
+            SELECT username,password,name,sex,birthday,qualification,position,hire_date hireDate,
+            CASE flag
+                WHEN '1' THEN '部门主管'
+                WHEN '3' THEN '员工'
+                ELSE
+                    '系统管理员'
+            END as flag from t_temp   where  username = #{username}
+    </select>
+    
+    <select id="getAssignment" resultType="com.jk.pojo.Task">
+       select  task_name from t_task
+    </select>
+
+    <select id="feedbackOrNot" resultType="com.jk.pojo.Task">
+      SELECT
+	p.plan_name planName,
+	s.task_name taskName,
+	p.plan_begin_date planBeginDate,
+	p.plan_end_date planEndDate,
+	p.plan_state planState,
+	p.feedback
+FROM
+	t_plan p
+	LEFT JOIN t_task s ON p.task_id = s.id
+	where 1 = 1
+	<if test="planName != null">
+        and p.plan_name = #{planName}
+    </if>
+    <if test="taskName != null">
+        and  s.task_name = #{taskName}
+    </if>
+        <if test="planBeginDateStartTime != null">
+            AND p.plan_begin_date <![CDATA[ >= ]]> #{planBeginDateStartTime}
+        </if>
+        <if test="planBeginDateEndTime != null">
+            AND p.plan_begin_date <![CDATA[ <= ]]> #{planBeginDateEndTime}
+        </if>
+
+        <if test="planEndDateStartTime != null">
+            AND p.plan_end_date <![CDATA[ >= ]]> #{planEndDateStartTime}
+        </if>
+        <if test="planEndDateEndTime != null">
+            AND p.plan_end_date <![CDATA[ <= ]]> #{planEndDateEndTime}
+        </if>
+        <if test="feedback != null">
+            and  p.feedback = #{feedback}
+        </if>
+    </select>
+
+</mapper>
