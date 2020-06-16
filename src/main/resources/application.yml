@@ -1,11 +1,20 @@
 spring:
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://182.92.150.178:3306/governing?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     username: root
     password: Root771662@
+server:
+  port: 8080
 
 
 mybatis:
-  typeAliasesPackage: com.jk.model
+  typeAliasesPackage: com.jk.pojo
   mapperLocations: classpath:mapper/*.xml
+  logging:
+    level:
+      com.example.demo.dao: debug

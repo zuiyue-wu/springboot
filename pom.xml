@@ -11,7 +11,7 @@
     <groupId>com.jk</groupId>
     <artifactId>governing</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>holiday_jkk</name>
+    <name>governing</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -79,11 +79,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tomcat.embed</groupId>-->
+<!--            <artifactId>tomcat-embed-jasper</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
         </dependency>
-
         <!-- io -->
         <dependency>
             <groupId>commons-io</groupId>
@@ -111,6 +116,11 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
             <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bgee.log4jdbc-log4j2</groupId>
+            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+            <version>1.16</version>
         </dependency>
     </dependencies>
 

@@ -2,28 +2,43 @@ package com.jk.controller;
 
 import com.jk.pojo.Plan;
 import com.jk.pojo.Task;
+import com.jk.pojo.TaskDao;
 import com.jk.pojo.Temp;
 import com.jk.service.TempService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-@RestController
+@Controller
 @RequestMapping("/temp")
 public class TempController {
 
     @Autowired
     private TempService tempService;
 
+    //@GetMapping("/toLogin")
+/*      @RequestMapping("/toLogin")
+    //@ResponseBody
+    public String toLogin(){
+        System.out.println(111);
+        return "login";
+    }*/
+/*    @RequestMapping("/index")
+    public String index() {
+        System.out.println(111);
+        return "login";
+    }*/
 
-    /**
-     *  查询该账户的身份
-     * @return
-     */
+        /**
+         *  查询该账户的身份
+         * @return
+         */
     @ResponseBody
-    @PostMapping("/selectPosition")
+    @RequestMapping("/selectPosition")
     public List<Temp> selectPosition() {
         return tempService.selectPosition();
     }
@@ -34,7 +49,7 @@ public class TempController {
      * @return
      */
     @ResponseBody
-    @PostMapping("/getImplementer")
+    @RequestMapping("/getImplementer")
     public List<Temp> getImplementer() {
         return tempService.getImplementer();
     }
@@ -48,7 +63,7 @@ public class TempController {
 
     @RequestMapping("login")
     @ResponseBody
-    public String login(@RequestBody Temp temp) {
+    public String login(Temp temp) {
         return tempService.selectUser(temp);
     }
 
@@ -58,7 +73,7 @@ public class TempController {
      * @param task
      */
     @ResponseBody
-    @PostMapping(value = "/insertTask")
+    @RequestMapping(value = "/insertTask")
     public void insertTask(@RequestBody Task task){
           tempService.insertTask(task);
     }
@@ -68,7 +83,7 @@ public class TempController {
      *  查看任务
      */
     @ResponseBody
-    @PostMapping("/selectTask")
+    @RequestMapping("/selectTask")
     public List<Task> selectTask() {
         return tempService.selectTask();
     }
@@ -77,7 +92,7 @@ public class TempController {
     // 详情    + 跟踪计划详情
 
     @ResponseBody
-    @PostMapping("/selectTaskDatails")
+    @RequestMapping("/selectTaskDatails")
     public Map selectTaskDatails(String id) {
         return tempService.selectTaskDetails(id);
     }
@@ -85,7 +100,7 @@ public class TempController {
 
     // 实施计划详情
     @ResponseBody
-    @PostMapping("/selectplanDatails")
+    @RequestMapping("/selectplanDatails")
     public List<Plan> selectplanDatails(String id) {
         return tempService.selectplanDatails(id);
     }
@@ -94,7 +109,7 @@ public class TempController {
     //跟踪任务
 
     @ResponseBody
-    @PostMapping("/getTrackingTasks")
+    @RequestMapping("/getTrackingTasks")
     public List<Task> getTrackingTasks() {
         return tempService.getTrackingTasks();
     }
@@ -103,7 +118,7 @@ public class TempController {
     // 根据id修改任务状态
 
     @ResponseBody
-    @PostMapping("/updateState")
+    @RequestMapping("/updateState")
     public  void updateState(Task task) {
          tempService.updateState(task);
     }
@@ -112,7 +127,7 @@ public class TempController {
 
     // 调整任务
     @ResponseBody
-    @PostMapping("/getNotTrackingTasks")
+    @RequestMapping("/getNotTrackingTasks")
     public  List<Task> getNotTrackingTasks() {
       return   tempService.getNotTrackingTasks();
     }
@@ -120,7 +135,7 @@ public class TempController {
 
     // 调整任务详情
     @ResponseBody
-    @PostMapping("/adjustmentDetails")
+    @RequestMapping("/adjustmentDetails")
     public  List<Task> adjustmentDetails(String id) {
         return   tempService.adjustmentDetails(id);
     }
@@ -131,7 +146,7 @@ public class TempController {
 
     // 修改调整任务详情
     @ResponseBody
-    @PostMapping("/updateDjustmentDetails")
+    @RequestMapping("/updateDjustmentDetails")
     public  void updateDjustmentDetails(Task task) {
         tempService.updateDjustmentDetails(task);
     }
@@ -139,7 +154,7 @@ public class TempController {
 
     // 查询员工
     @ResponseBody
-    @PostMapping("/selectTemps")
+    @RequestMapping("/selectTemps")
     public  void selectTemps() {
         tempService.selectTemps();
     }
@@ -147,14 +162,14 @@ public class TempController {
 
     // 查询员工
     @ResponseBody
-    @PostMapping("/selectTempsDateils")
+    @RequestMapping("/selectTempsDateils")
     public  List<Temp> selectTempsDateils(String username) {
        return tempService.selectTempsDateils(username);
     }
 
     // 删除
     @ResponseBody
-    @PostMapping("/deleteTask")
+    @RequestMapping("/deleteTask")
     public void deleteTask(String id) {
          tempService.deleteTask(id);
     }
@@ -162,14 +177,14 @@ public class TempController {
 
     // 下拉列表框 所属任务
     @ResponseBody
-    @PostMapping("/getAssignment")
+    @RequestMapping("/getAssignment")
     public List<Task> getAssignment() {
       return   tempService.getAssignment();
     }
 
     // 条件查询
     @ResponseBody
-    @PostMapping("/feedbackOrNot")
+    @RequestMapping("/feedbackOrNot")
     public List<Task> feedbackOrNot(Task task) {
         return tempService.feedbackOrNot(task);
     }
@@ -179,7 +194,7 @@ public class TempController {
      * @return
      */
     @ResponseBody
-    @PostMapping("/deletePosition")
+    @RequestMapping("/deletePosition")
     public void deletePosition(String username ){
          tempService.deletePosition(username);
     }
@@ -198,10 +213,10 @@ public class TempController {
 	 * 新增员工
 	 * @param nav
 	 */
-	@PostMapping("/savePower")
+	@RequestMapping("/savePower")
 	@ResponseBody
 	public void savePower(Temp temp){
-		 String Str1=UUID.randomUUID().toString().replace("-", "");
+		 String Str1= UUID.randomUUID().toString().replace("-", "");
 		 temp.setUsername(Str1);
 		tempService.savePower(temp);
 	}
@@ -230,7 +245,7 @@ public class TempController {
 	 * 员工新增部门
 	 * @param temp
 	 */
-	@PostMapping("/updateflag")
+	@RequestMapping("/updateflag")
 	@ResponseBody
 	public void updateflag(Temp temp){
 		tempService.updateflag(temp);
@@ -249,7 +264,7 @@ public class TempController {
 	 * 新建计划
 	 * @param temp
 	 */
-	@PostMapping("/saveplan")
+	@RequestMapping("/saveplan")
 	@ResponseBody
 	public void saveplan(Plan plan){
 		tempService.saveplan(plan);
@@ -259,7 +274,7 @@ public class TempController {
 	 * 修改任务状态
 	 * @param temp
 	 */
-	@PostMapping("/updatask")
+	@RequestMapping("/updatask")
 	@ResponseBody
 	public void updatask(int id){
 		tempService.updatask(id);
@@ -277,7 +292,7 @@ public class TempController {
 	 * 计划修改
 	 * @param temp
 	 */
-	@PostMapping("/updatPlan")
+	@RequestMapping("/updatPlan")
 	@ResponseBody
 	public void updatPlan(Plan plan){
 		tempService.updatPlan(plan);

@@ -1,12 +1,15 @@
 package com.jk.mapper;
 
+import com.jk.pojo.Plan;
+import com.jk.pojo.Task;
+import com.jk.pojo.TaskDao;
 import com.jk.pojo.Temp;
 
 import java.util.List;
 
 public interface TempMapper {
 
-    List<Temp>  selectPosition();
+    List<Temp>  selectPositions();
 
     List<Temp> selectUser(Temp temp);
 

@@ -6,7 +6,7 @@
     </delete>
 
 
-    <select id="selectPosition" resultType="com.jk.pojo.Temp">
+    <select id="selectPositions" resultType="com.jk.pojo.Temp">
           select  name,username,position,super_id from t_temp  group  by username
     </select>
 
@@ -26,7 +26,7 @@
     </select>
 
     <select id="selectPassword" resultType="com.jk.pojo.Temp">
-        SELECT  name,password,position FROM t_temp  WHERE name=#{name}
+        SELECT  name,password,position,flag FROM t_temp  WHERE name=#{name}
     </select>
 
 
@@ -257,22 +257,22 @@ FROM
     </delete>
 
     <!-- 查询员工 -->
-    <select id="selectPosition" resultType="com.jk.pojo.Temp">
+    <select id="listPosition" resultType="com.jk.pojo.Temp">
           select  * from t_temp
     </select>
 
     <!-- 新增员工 -->
-    <insert id = "savePower" parameterType="com.jk.pojo.Temp ">
+    <insert id = "savePower" parameterType="com.jk.pojo.Temp">
 <!--     INSERT INTO t_temp (username, NAME, PASSWORD, sex, birthday, hire_Date, position, qualification, professional, experience, flag )
 	VALUES values(#{username},#{name},#{password},#{sex},
     #{birthday},#{hireDate},#{position},#{qualification},#{professional},#{experience},#{flag})
      -->
-	   INSERT INTO t_temp(username, NAME, PASSWORD, sex,birthday, hire_Date, position, qualification, professional, experience, flag)
-		VALUES (#{username},#{name},#{password},#{sex},#{birthday},#{hireDate},#{position},#{qualification},#{professional},#{experience},#{flag});
+	   INSERT INTO t_temp(username,name,password,sex,birthday,hire_Date,position,qualification,experience,flag)
+		VALUES (#{username},#{name},#{password},#{sex},#{birthday},#{hireDate},#{position},#{qualification},#{experience},#{flag})
 	</insert>
 
     <!-- 查询未分配员工 -->
-    <select id="selectPosition" resultType="com.jk.pojo.Temp">
+    <select id="listUnassigned" resultType="com.jk.pojo.Temp">
           select  * from t_temp where super_id = '' OR super_id IS NULL and flag  = "3"
     </select>
 
@@ -283,10 +283,10 @@ FROM
 
     <!-- 新增员工部门 -->
     	<update id="updateflag" parameterType="com.jk.pojo.Temp">
-    	 	update t_temp t set superid = #{superid} where username=#{username}
+    	 	update t_temp t set super_id = #{superId} where username=#{username}
     	</update>
     <!-- 查询员工任务 -->
-    	 <select id="listflag" resultType="com.jk.pojo.TaskDao">
+    	 <select id="listTaskDao" resultType="com.jk.pojo.TaskDao">
 		select * from t_task t1 left join t_temp t2 on t1.staff_id = t2.username
 	left join t_plan t3 on t3.task_id = t1.id
 	where t2.flag = 3
@@ -295,14 +295,14 @@ FROM
     <!-- 新建计划 -->
     	    <insert id = "saveplan" parameterType="com.jk.pojo.Plan">
 	   INSERT INTO t_plan(id,lan_name, plan_state, feedback, plan_begin_date,plan_end_date, plan_description, task_id)
-		VALUES (#{id},#{planName},#{planState},#{feedback},#{planBeginDate},#{planEndDate},#{planDescription},#{taskId});
+		VALUES (#{id},#{planName},#{planState},#{feedback},#{planBeginDate},#{planEndDate},#{planDescription},#{taskId})
 	</insert>
 	<!-- 修改任务状态 -->
 	    <update id="updatask" parameterType="com.jk.pojo.Task">
     	 	update t_task t set task_state = 1 where id=#{id}
     	</update>
     <!-- 计划反馈 -->
-	   <select id="updatequeryTask" resultType="com.jk.pojo.Plan">
+	   <select id="updatequeryTask" resultType="com.jk.pojo.Task">
 			select *  from t_plan where id = #{id}
     </select>
 
@@ -314,4 +314,3 @@ FROM
     	</update>
 </mapper>
 
-</mapper>
